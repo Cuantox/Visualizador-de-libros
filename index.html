@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viaje a la semilla / 9no</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <div id="book-container">
+        <div class="page" id="page-1">Contenido de la página 1</div>
+        <div class="page" id="page-2">Contenido de la página 2</div>
+        <div class="page" id="page-3">Contenido de la página 3</div>
+    </div>
+    
+    <div class="controls">
+        <button id="prev" title="Ir a la página anterior">Atrás</button>
+        <button id="next" title="Ir a la página siguiente">Siguiente</button>
+        <button id="download-page" title="Descargar esta página en PDF">Descargar Página</button>
+        <button id="download-book" title="Descargar todo el libro en PDF">Descargar Libro</button>
+    </div>
+    
+    <footer>
+        <p style="position: fixed; bottom: 10px; right: 10px; font-size: 12px;">Libro hecho por 9no año.</p>
+        <p style="position: fixed; bottom: 25px; right: 10px; font-size: 10px;">Pagina web hecha por Agustin.</p>
+    </footer>
+    
+    <script>
+        let currentPage = 1;
+        const pages = document.querySelectorAll('.page');
+        const prevButton = document.getElementById('prev');
+        const nextButton = document.getElementById('next');
+        const downloadPageButton = document.getElementById('download-page');
+        const downloadBookButton = document.getElementById('download-book');
+        
+        function showPage(pageNumber) {
+            pages.forEach((page, index) => {
+                page.style.display = (index === pageNumber - 1) ? 'block' : 'none';
+            });
+            prevButton.disabled = pageNumber === 1;
+            nextButton.disabled = pageNumber === pages.length;
+        }
+        
+        function downloadCurrentPage() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.text(pages[currentPage - 1].textContent, 10, 10);
+            doc.save(`Viaje a la semilla - Pagina-${currentPage}.pdf`);
+        }
+        
+        function downloadWholeBook() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            pages.forEach((page, index) => {
+                if (index > 0) doc.addPage();
+                doc.text(page.textContent, 10, 10);
+            });
+            doc.save("Viaje a la semilla.pdf");
+        }
+        
+        showPage(currentPage);
+        
+        prevButton.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                showPage(currentPage);
+            }
+        });
+        
+        nextButton.addEventListener('click', () => {
+            if (currentPage < pages.length) {
+                currentPage++;
+                showPage(currentPage);
+            }
+        });
+        
+        downloadPageButton.addEventListener('click', downloadCurrentPage);
+        downloadBookButton.addEventListener('click', downloadWholeBook);
+    </script>
+</body>
+</html>
+

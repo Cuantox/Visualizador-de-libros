@@ -1,0 +1,52 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+}
+
+#book-container {
+    width: 80%;
+    height: 80%;
+    overflow: hidden;
+    position: relative;
+}
+
+.page {
+    width: 100%;
+    height: 100%;
+    display: none;
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    transition: transform 1s ease-in-out;
+}
+
+.controls {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+button {
+    padding: 10px 20px;
+    margin: 5px;
+    background-color: #333;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #555;
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
