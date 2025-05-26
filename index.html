@@ -4,37 +4,90 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Viaje a la semilla / 9no</title>
-    <link rel="stylesheet" href="styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            overflow: hidden; /* Evita que aparezca scroll en la página */
+        }
+
+        #book-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .page {
+            display: none;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .page img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain; /* Asegura que la imagen no se distorsione */
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+
+        button {
+            margin: 5px;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+        }
+    </style>
 </head>
 <body>
     <div id="book-container">
-<div class="page" id="page-1">
-    <h1>1) Los nacimientos</h1>
-    <p>
-El agua me llevó a la luz la luz me encandilaba rompí en llanto y el silencio se quebró / en la sangre iluminada se dio el milagro: un sol surgió de la ceniza. Mañana tiraré mi muerte al viento para siempre.
-    </p>
-</div>
-
-<div class="page" id="page-3">
-    <h1>3) Formas de volver a casa</h1>
-    <p>
-Ese día en el que volví a ser yo caminé descalza en mis pensamientos el sol refleja e ilumina todo. Mi hogar es lo seguro; mi hogar está en mi imaginación. Mi cuerpo vuela hacia el cielo, el sol brilla hasta dejarme encandilada, y aunque me gustaba estar lejos de casa la música me transporta al lugar que quiero estar. Recuerdo flashes de mi infancia: el olor de la casa de mi abuela, el sonido del motor de un auto de carreras los asados y los trofeos que ganaron mis mayores.
-</div>
+        <!-- Página 1 -->
+        <div class="page" id="page-1">
+            <img src="IMG_0739.png" alt="Página 1">
+        </div>
+        <!-- Página 2 -->
+        <div class="page" id="page-2">
+            <img src="photo2.png" alt="Página 2">
+        </div>
+        <!-- Página 3 -->
+        <div class="page" id="page-3">
+            <img src="photo3.png" alt="Página 3">
+        </div>
     </div>
-    
+
     <div class="controls">
         <button id="prev" title="Ir a la página anterior">Atrás</button>
         <button id="next" title="Ir a la página siguiente">Siguiente</button>
         <button id="download-page" title="Descargar esta página en PDF">Descargar Página</button>
         <button id="download-book" title="Descargar todo el libro en PDF">Descargar Libro</button>
     </div>
-    
+
     <footer>
-        <p style="position: fixed; bottom: 10px; right: 10px; font-size: 12px;">Libro hecho por 9no año.</p>
-        <p style="position: fixed; bottom: 25px; right: 10px; font-size: 10px;">Pagina web hecha por Agustin.</p>
+        <p>Libro hecho por 9no año.</p>
+        <p>Pagina web hecha por Agustin.</p>
     </footer>
-    
+
     <script>
         let currentPage = 1;
         const pages = document.querySelectorAll('.page');
@@ -45,7 +98,7 @@ Ese día en el que volví a ser yo caminé descalza en mis pensamientos el sol r
         
         function showPage(pageNumber) {
             pages.forEach((page, index) => {
-                page.style.display = (index === pageNumber - 1) ? 'block' : 'none';
+                page.style.display = (index === pageNumber - 1) ? 'flex' : 'none';
             });
             prevButton.disabled = pageNumber === 1;
             nextButton.disabled = pageNumber === pages.length;
@@ -54,7 +107,10 @@ Ese día en el que volví a ser yo caminé descalza en mis pensamientos el sol r
         function downloadCurrentPage() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
-            doc.text(pages[currentPage - 1].textContent, 10, 10);
+            const img = document.querySelector(`#page-${currentPage} img`);
+            const imgData = img.src;
+            // Redimensionamos la imagen en el PDF a un tamaño que se ajuste
+            doc.addImage(imgData, 'PNG', 10, 10, 180, 250); // Ajusta las medidas si es necesario
             doc.save(`Viaje a la semilla - Pagina-${currentPage}.pdf`);
         }
         
@@ -63,7 +119,10 @@ Ese día en el que volví a ser yo caminé descalza en mis pensamientos el sol r
             const doc = new jsPDF();
             pages.forEach((page, index) => {
                 if (index > 0) doc.addPage();
-                doc.text(page.textContent, 10, 10);
+                const img = page.querySelector('img');
+                const imgData = img.src;
+                // Redimensionamos la imagen en el PDF a un tamaño que se ajuste
+                doc.addImage(imgData, 'PNG', 10, 10, 180, 250); // Ajusta las medidas si es necesario
             });
             doc.save("Viaje a la semilla.pdf");
         }
@@ -89,4 +148,3 @@ Ese día en el que volví a ser yo caminé descalza en mis pensamientos el sol r
     </script>
 </body>
 </html>
-
